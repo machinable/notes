@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
@@ -9,19 +9,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import AddIcon from '@material-ui/icons/Add';
 
-const categories = [
-  {
-    id: 'Notes',
-    children: [
-      { id: 'Shopping List', active: true },
-      { id: 'Ideas'},
-      { id: 'Todo'},
-      { id: 'Projects'},
-      { id: 'Cars'},
-      { id: 'Cool stuff'},
-    ],
-  },
-];
+import client from '../../apiclient/';
 
 const styles = theme => ({
   categoryHeader: {
@@ -68,65 +56,106 @@ const styles = theme => ({
   },
 });
 
-function Navigator(props) {
-  const { classes, ...other } = props;
+class Navigator extends Component {
+  constructor(props){
+    super(props);
 
-  return (
-    <Drawer variant="permanent" {...other}>
-      <List disablePadding>
-        <ListItem className={classNames(classes.firebase, classes.item, classes.itemCategory)}>
-          Notes App
-        </ListItem>
-        <ListItem button className={classNames(classes.item, classes.itemCategory)}>
-          <ListItemIcon>
-            <AddIcon />
-          </ListItemIcon>
-          <ListItemText
-            classes={{
-              primary: classes.itemPrimary,
-            }}
-          >
-            New Note
-          </ListItemText>
-        </ListItem>
-        {categories.map(({ id, children }) => (
-          <React.Fragment key={id}>
-            <ListItem className={classes.categoryHeader}>
-              <ListItemText
-                classes={{
-                  primary: classes.categoryHeaderPrimary,
-                }}
-              >
-                {id}
-              </ListItemText>
-            </ListItem>
-            {children.map(({ id: childId, icon, active }) => (
-              <ListItem
-                button
-                dense
-                key={childId}
-                className={classNames(
-                  classes.item,
-                  classes.itemActionable,
-                  active && classes.itemActiveItem,
-                )}
-              >
-                <ListItemIcon></ListItemIcon>
+    this.state = {
+      notes: [],
+      activeNote: ""
+    };
+  }
+
+  newNote = () => {
+    var noteTitle = new Date().toISOString() + " Note";
+    client.notes().create({name: noteTitle, content: "# " + noteTitle + "\n"}, this.listNotes, this.err)
+  }
+
+  err = (response) => {
+    console.log("error --");
+    console.log(response);
+  }
+
+  recieveNotes = (response) => {
+    console.log(response);
+    this.setState({notes: response.data.items});
+  }
+
+  listNotes = () => {
+    client.notes().list(this.recieveNotes, this.err)
+  }
+
+  componentWillMount = () => {
+    this.listNotes();
+  }
+
+  render() {
+
+    const { classes, ...other } = this.props;
+  
+    const categories = [
+      {
+        id: 'My Notes',
+        children: this.state.notes,
+      },
+    ];
+
+    return (
+      <Drawer variant="permanent" {...other}>
+        <List disablePadding>
+          <ListItem className={classNames(classes.firebase, classes.item, classes.itemCategory)}>
+            notes
+          </ListItem>
+          <ListItem button className={classNames(classes.item, classes.itemCategory)}>
+            <ListItemIcon>
+              <AddIcon />
+            </ListItemIcon>
+            <ListItemText
+              classes={{
+                primary: classes.itemPrimary,
+              }}
+              onClick={this.newNote}
+            >
+              New Note
+            </ListItemText>
+          </ListItem>
+          {categories.map(({ id, children }) => (
+            <React.Fragment key={id}>
+              <ListItem className={classes.categoryHeader}>
                 <ListItemText
                   classes={{
-                    primary: classes.itemPrimary,
-                    textDense: classes.textDense,
+                    primary: classes.categoryHeaderPrimary,
                   }}
                 >
-                  {childId}
                 </ListItemText>
               </ListItem>
-            ))}
-          </React.Fragment>
-        ))}
-      </List>
-    </Drawer>
-  );
+              {children.map(({ id: noteId, name, active }) => (
+                <ListItem
+                  button
+                  dense
+                  key={noteId}
+                  className={classNames(
+                    classes.item,
+                    classes.itemActionable,
+                    (noteId === this.state.activeNote) && classes.itemActiveItem,
+                  )}
+                >
+                  <ListItemText
+                    classes={{
+                      primary: classes.itemPrimary,
+                      textDense: classes.textDense,
+                    }}
+                  >
+                    {name}
+                  </ListItemText>
+                </ListItem>
+              ))}
+            </React.Fragment>
+          ))}
+        </List>
+      </Drawer>
+    );
+  }
 }
 
 Navigator.propTypes = {

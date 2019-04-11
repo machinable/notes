@@ -34,10 +34,11 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ## Credits
 
+* [mui-org/material-ui](https://github.com/mui-org/material-ui)
 * [jonschlinkert/markdown-toc](https://github.com/jonschlinkert/markdown-toc)
 * [rexxars/react-markdown](https://github.com/rexxars/react-markdown)
 * [andrerpena/react-mde](https://github.com/andrerpena/react-mde)
 
 ## License
 
-MIT
+MIT © [anothrNick](https://github.com/anothrNick)
