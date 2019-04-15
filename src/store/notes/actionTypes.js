@@ -1,0 +1,1 @@
+export const SET_CURRENT_NOTE = 'notes.SET_CURRENT_NOTE';

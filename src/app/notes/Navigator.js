@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
@@ -61,8 +62,7 @@ class Navigator extends Component {
     super(props);
 
     this.state = {
-      notes: [],
-      activeNote: ""
+      notes: []
     };
   }
 
@@ -77,7 +77,6 @@ class Navigator extends Component {
   }
 
   recieveNotes = (response) => {
-    console.log(response);
     this.setState({notes: response.data.items});
   }
 
@@ -85,13 +84,19 @@ class Navigator extends Component {
     client.notes().list(this.recieveNotes, this.err)
   }
 
-  componentWillMount = () => {
+  componentDidMount = () => {
     this.listNotes();
+  }
+
+  selectNote = (noteId) => {
+    console.log(noteId);
+    const history = this.props.history;
+    history.push('/' + noteId);
   }
 
   render() {
 
-    const { classes, ...other } = this.props;
+    const { classes } = this.props;
   
     const categories = [
       {
@@ -101,7 +106,7 @@ class Navigator extends Component {
     ];
 
     return (
-      <Drawer variant="permanent" {...other}>
+      <Drawer variant="permanent">
         <List disablePadding>
           <ListItem className={classNames(classes.firebase, classes.item, classes.itemCategory)}>
             notes
@@ -129,15 +134,17 @@ class Navigator extends Component {
                 >
                 </ListItemText>
               </ListItem>
-              {children.map(({ id: noteId, name, active }) => (
+              {children.map(({ id: noteId, name }) => (
                 <ListItem
                   button
                   dense
+                  selected={noteId === this.props.noteId}
                   key={noteId}
+                  onClick={() => this.selectNote(noteId)}
                   className={classNames(
                     classes.item,
                     classes.itemActionable,
-                    (noteId === this.state.activeNote) && classes.itemActiveItem,
+                    (noteId === this.props.noteId) && classes.itemActiveItem,
                   )}
                 >
                   <ListItemText
@@ -162,4 +169,11 @@ Navigator.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Navigator);
+// redux
+function mapStateToProps(state) {
+	return {
+		noteId: state.noteId
+	};
+}
+
+export default withStyles(styles)(connect(mapStateToProps)(Navigator));

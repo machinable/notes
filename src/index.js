@@ -17,7 +17,8 @@ const App = () => (
 				<Route path="/login" component={User} />
 				<Route path="/register" component={User} />
 
-				<Route path="/" component={Home} />
+				<Route path="/:noteId" component={({history, match}) => <Home history={history} match={match}/>} />
+				<Route path="/" component={({history, match}) => <Home history={history} match={match}/>} />
 			</Switch>
 		</Router>
 	</div>

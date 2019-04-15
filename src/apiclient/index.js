@@ -37,7 +37,7 @@ class NotesClient {
             // retrieves a single note based on id
             // ... if we wanted to be clever, we really do not need this as we list all notes
             get: function(id, success, error) {
-                axios.put(GET_NOTE.replace("{id}", id), {})
+                axios.get(GET_NOTE.replace("{id}", id), {})
                     .then(success)
                     .catch(error);
             }
