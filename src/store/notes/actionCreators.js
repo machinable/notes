@@ -7,3 +7,10 @@ export function setNote(noteId) {
     }
     return action;
 }
+
+export function toggleEditNote(noteId) {
+    const action = {
+        type: types.TOGGLE_EDIT
+    }
+    return action;
+}

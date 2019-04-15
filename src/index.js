@@ -6,6 +6,7 @@ import store from './store';
 import createHistory from 'history/createBrowserHistory';
 import Home from './containers/Home';
 import User from './containers/User';
+import './index.css';
 
 const history = createHistory();
 

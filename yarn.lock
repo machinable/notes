@@ -7297,6 +7297,10 @@ react-markdown@v4.0.6:
     unist-util-visit "^1.3.0"
     xtend "^4.0.1"
 
+react-mde@^7.0.3:
+  version "7.3.2"
+  resolved "https://registry.yarnpkg.com/react-mde/-/react-mde-7.3.2.tgz#8954a8122a68a12ca77a821fc88b1f59615d59cd"
+
 react-redux@^5.0.6:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-5.1.1.tgz#88e368682c7fa80e34e055cd7ac56f5936b0f52f"
@@ -7483,6 +7487,10 @@ recursive-readdir@2.2.2:
   resolved "https://registry.yarnpkg.com/recursive-readdir/-/recursive-readdir-2.2.2.tgz#9946fb3274e1628de6e36b2f6714953b4845094f"
   dependencies:
     minimatch "3.0.4"
+
+redux-thunk@v2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.3.0.tgz#51c2c19a185ed5187aaa9a2d08b666d0d6467622"
 
 redux@^3.7.2:
   version "3.7.2"
@@ -7985,6 +7993,12 @@ shell-quote@1.6.1:
 shellwords@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/shellwords/-/shellwords-0.1.1.tgz#d6b9181c1a48d397324c84871efbcfc73fc0654b"
+
+showdown@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/showdown/-/showdown-1.9.0.tgz#d49d2a0b6db21b7c2e96ef855f7b3b2a28ef46f4"
+  dependencies:
+    yargs "^10.0.3"
 
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
@@ -9319,6 +9333,12 @@ yargs-parser@^10.1.0:
   dependencies:
     camelcase "^4.1.0"
 
+yargs-parser@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-8.1.0.tgz#f1376a33b6629a5d063782944da732631e966950"
+  dependencies:
+    camelcase "^4.1.0"
+
 yargs-parser@^9.0.2:
   version "9.0.2"
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-9.0.2.tgz#9ccf6a43460fe4ed40a9bb68f48d43b8a68cc077"
@@ -9341,6 +9361,23 @@ yargs@12.0.2:
     which-module "^2.0.0"
     y18n "^3.2.1 || ^4.0.0"
     yargs-parser "^10.1.0"
+
+yargs@^10.0.3:
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-10.1.2.tgz#454d074c2b16a51a43e2fb7807e4f9de69ccb5c5"
+  dependencies:
+    cliui "^4.0.0"
+    decamelize "^1.1.1"
+    find-up "^2.1.0"
+    get-caller-file "^1.0.1"
+    os-locale "^2.0.0"
+    require-directory "^2.1.1"
+    require-main-filename "^1.0.1"
+    set-blocking "^2.0.0"
+    string-width "^2.0.0"
+    which-module "^2.0.0"
+    y18n "^3.2.1"
+    yargs-parser "^8.1.0"
 
 yargs@^11.0.0:
   version "11.1.0"

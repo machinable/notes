@@ -96,7 +96,7 @@ class Navigator extends Component {
 
   render() {
 
-    const { classes } = this.props;
+    const { classes, variant, open, onClose } = this.props;
   
     const categories = [
       {
@@ -106,7 +106,7 @@ class Navigator extends Component {
     ];
 
     return (
-      <Drawer variant="permanent">
+      <Drawer variant={variant} open={open} onClose={onClose}>
         <List disablePadding>
           <ListItem className={classNames(classes.firebase, classes.item, classes.itemCategory)}>
             notes

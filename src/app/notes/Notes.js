@@ -174,7 +174,7 @@ class Paperbase extends React.Component {
               />
             </Hidden>
             <Hidden xsDown implementation="css">
-              <Navigator history={this.props.history} PaperProps={{ style: { width: drawerWidth } }} />
+              <Navigator variant="permanent" history={this.props.history} PaperProps={{ style: { width: drawerWidth } }} />
             </Hidden>
           </nav>
           <div className={classes.appContent}>

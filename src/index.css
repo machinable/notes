@@ -12,3 +12,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.override-mde-preview.mde-preview .mde-preview-content {
+  padding: 0px !important;
+}
