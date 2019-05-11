@@ -171,6 +171,7 @@ class Paperbase extends React.Component {
                 variant="temporary"
                 open={this.state.mobileOpen}
                 onClose={this.handleDrawerToggle}
+                history={this.props.history} 
               />
             </Hidden>
             <Hidden xsDown implementation="css">
@@ -180,7 +181,7 @@ class Paperbase extends React.Component {
           <div className={classes.appContent}>
             <Header onDrawerToggle={this.handleDrawerToggle} />
             <main className={classes.mainContent}>
-              <Content />
+              <Content history={this.props.history} />
             </main>
           </div>
         </div>

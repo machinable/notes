@@ -11,6 +11,7 @@ class NotesClient {
         var CREATE_NOTE = this.projectHost() + "/api/notes";
         var GET_NOTE = this.projectHost() + "/api/notes/{id}";
         var UPDATE_NOTE = this.projectHost() + "/api/notes/{id}";
+        var DELETE_NOTE = this.projectHost() + "/api/notes/{id}";
 
         return {
             // lists all (limit 100) notes
@@ -38,6 +39,13 @@ class NotesClient {
             // ... if we wanted to be clever, we really do not need this as we list all notes
             get: function(id, success, error) {
                 axios.get(GET_NOTE.replace("{id}", id), {})
+                    .then(success)
+                    .catch(error);
+            },
+
+            // deletes a note based on id
+            deleteNote: function(id, success, error) {
+                axios.delete(DELETE_NOTE.replace("{id}", id), {})
                     .then(success)
                     .catch(error);
             }

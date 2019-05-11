@@ -67,9 +67,9 @@ class Navigator extends Component {
   }
 
   newNote = () => {
-    var noteTitle = new Date().toISOString() + " Note";
+    var noteTitle = "New Note";
     client.notes().create({name: noteTitle, content: "# " + noteTitle + "\n"}, this.listNotes, this.err)
-  }
+  } 
 
   err = (response) => {
     console.log("error --");
@@ -89,7 +89,6 @@ class Navigator extends Component {
   }
 
   selectNote = (noteId) => {
-    console.log(noteId);
     const history = this.props.history;
     history.push('/' + noteId);
   }

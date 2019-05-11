@@ -6,14 +6,15 @@
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",
     "axios": "^0.17.0",
+    "markdown-toc": "v1.2.0",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "react-scripts": "2.1.8",
+    "react-mde": "^7.0.3",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4",
+    "react-scripts": "2.1.8",
     "redux": "^3.7.2",
     "redux-thunk": "v2.3.0",
-    "react-mde": "^7.0.3",
     "showdown": "^1.9.0"
   },
   "scripts": {

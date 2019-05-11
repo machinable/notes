@@ -5,6 +5,12 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import CreateIcon from '@material-ui/icons/Create';
+import SaveIcon from '@material-ui/icons/Save';
+import DeleteIcon from '@material-ui/icons/DeleteOutline';
+import Tooltip from '@material-ui/core/Tooltip';
 import client from '../../apiclient/';
 
 import ReactMde from "react-mde";
@@ -33,6 +39,8 @@ const styles = theme => ({
   },
 });
 
+const noteTitle = /^(?:#)\s*(.+?)[ \t]*$/gm;
+
 class Content extends Component {
   constructor(props){
     super(props);
@@ -40,7 +48,9 @@ class Content extends Component {
     this.state = {
       note: undefined,
       loading: true,
-      tab: "write"
+      edit: false,
+      tab: "write",
+      toc: ""
     };
 
     this.converter = new Showdown.Converter({
@@ -74,7 +84,7 @@ class Content extends Component {
 		
 		if (newId !== oldId) {
       this.setState({loading: true, note: undefined}, this.getNote);
-		}
+    }
 	}
 
   componentDidMount = () => {
@@ -95,22 +105,98 @@ class Content extends Component {
     this.setState({tab})
   };
 
+  toggleEdit = () => {
+    this.setState({edit: !this.state.edit});
+  }
+
+  saveNote = () => {
+    // save note
+    var wasThis = this;
+    var titles = noteTitle.exec(this.state.note.content);
+    var title = "Create a header for title";
+    
+    if (titles && titles.length > 0) {
+      title = titles[0].replace(/# /g, '').replace(/#/g, '');
+    }
+
+    client.notes().update(
+      this.state.note.id, 
+      {content: this.state.note.content, name: title}, 
+      function(){
+        wasThis.setState({edit: !wasThis.state.edit});
+      }, 
+      function(){});
+  }
+
+  deleteNote = () => {
+    // delete note
+    client.notes().deleteNote(
+      this.state.note.id,
+      this.refreshList,
+      function(response){console.log("error"); console.log(response);}
+    );
+  }
+
+  refreshList = () => {
+    const history = this.props.history;
+    history.push('/');
+
+    // make this more elegant, please...
+    window.location.reload();
+  }
+
   render = () => {
     const { classes } = this.props;
     return (
       <React.Fragment>
           <Paper className={classes.paper}>
+              <div className="note-header" >
+              {this.props.noteId && this.state.loading && 
               <Typography align="center">
-                {this.props.noteId && this.state.loading && <CircularProgress />}
+                  <CircularProgress />
               </Typography>
+              }
+              {this.props.noteId && !this.state.loading && 
+              <Grid container spacing={8} alignItems="center">
 
-              {!this.props.editingNote &&
+                {!this.state.edit &&
+                  <Grid item>
+                    <Tooltip title="Edit this note">
+                      <IconButton color="primary" onClick={this.toggleEdit}>
+                        <CreateIcon className={classes.create} />
+                      </IconButton>
+                    </Tooltip>
+                  </Grid>
+                }
+
+                {this.state.edit &&
+                  <Grid item>
+                    <Tooltip title="Save change to note">
+                      <IconButton color="primary" onClick={this.saveNote}>
+                        <SaveIcon className={classes.create} />
+                      </IconButton>
+                    </Tooltip>
+                  </Grid>
+                }
+
+                <Grid item>
+                  <Tooltip title="Delete this note">
+                    <IconButton color="secondary" onClick={this.deleteNote}>
+                      <DeleteIcon className={classes.delete} />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+              }
+              </div>
+
+              {!this.state.edit &&
               <div className={classes.contentWrapper}>
                   <Typography color="textSecondary" align="center">
                       {!this.props.noteId && "Select or create a new note"}
                   </Typography>
 
-                  {this.state.note && !this.props.editingNote && 
+                  {this.state.note && !this.state.edit && 
                     <Typography>
                       <div className="override-mde-preview mde-preview">
                         <div className="mde-preview-content">
@@ -120,7 +206,7 @@ class Content extends Component {
                     </Typography>
                   }
               </div>}
-              {this.state.note && this.props.editingNote && 
+              {this.state.note && this.state.edit && 
                   <Typography>
                     <ReactMde
                       onChange={this.handleValueChange}

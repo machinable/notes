@@ -16,3 +16,28 @@ code {
 .override-mde-preview.mde-preview .mde-preview-content {
   padding: 0px !important;
 }
+
+.Connect-Content--contentWrapper-270 {
+  margin: 16px !important;
+}
+
+.Paperbase-mainContent-4 {
+  padding-bottom: 24px !important;
+}
+
+.MuiDrawer-paper-32 {
+  width: 256px;
+}
+
+.m15 {
+  margin: 15px;
+}
+
+.m25 {
+  margin: 25px;
+}
+
+.note-header {
+  padding: 15px;
+  background-color: #EFEFEF;
+}

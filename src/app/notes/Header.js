@@ -7,11 +7,7 @@ import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import UserIcon from '@material-ui/icons/Mood';
-import CreateIcon from '@material-ui/icons/Create';
-import SaveIcon from '@material-ui/icons/Save';
-import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import Toolbar from '@material-ui/core/Toolbar';
-import Tooltip from '@material-ui/core/Tooltip';
 import { withStyles } from '@material-ui/core/styles';
 import {toggleEditNote} from '../../store/notes/actionCreators';
 
@@ -77,34 +73,6 @@ class Header extends Component {
                   </IconButton>
                 </Grid>
               </Hidden>
-
-              {!this.props.editingNote &&
-                <Grid item>
-                  <Tooltip title="Edit this note">
-                    <IconButton color="inherit" onClick={this.toggleEdit}>
-                      <CreateIcon className={classes.create} />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-              }
-
-              {this.props.editingNote &&
-                <Grid item>
-                  <Tooltip title="Save change to note">
-                    <IconButton color="inherit" onClick={this.toggleEdit}>
-                      <SaveIcon className={classes.create} />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
-              }
-
-              <Grid item>
-                <Tooltip title="Delete this note">
-                  <IconButton color="inherit">
-                    <DeleteIcon className={classes.delete} />
-                  </IconButton>
-                </Tooltip>
-              </Grid>
 
               <Grid item xs />
 
