@@ -9,6 +9,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import AddIcon from '@material-ui/icons/Add';
+import {setNotes} from '../../store/notes/actionCreators';
 
 import client from '../../apiclient/';
 
@@ -58,16 +59,9 @@ const styles = theme => ({
 });
 
 class Navigator extends Component {
-  constructor(props){
-    super(props);
-
-    this.state = {
-      notes: []
-    };
-  }
-
   newNote = () => {
-    var noteTitle = "New Note";
+    var noteTitle = "Note " + (Object.keys(this.props.notes).length + 1);
+    // TODO: add note in global state rather than requesting entire list again
     client.notes().create({name: noteTitle, content: "# " + noteTitle + "\n"}, this.listNotes, this.err)
   } 
 
@@ -77,7 +71,7 @@ class Navigator extends Component {
   }
 
   recieveNotes = (response) => {
-    this.setState({notes: response.data.items});
+		this.props.dispatch(setNotes(response.data.items));
   }
 
   listNotes = () => {
@@ -95,12 +89,17 @@ class Navigator extends Component {
 
   render() {
 
-    const { classes, variant, open, onClose } = this.props;
+    const { classes, variant, open, onClose, notes } = this.props;
   
+    var notesArr = [];
+    if(notes) {
+      notesArr = Object.values(notes);
+    }
+
     const categories = [
       {
         id: 'My Notes',
-        children: this.state.notes,
+        children: notesArr,
       },
     ];
 
@@ -110,16 +109,14 @@ class Navigator extends Component {
           <ListItem className={classNames(classes.firebase, classes.item, classes.itemCategory)}>
             notes
           </ListItem>
-          <ListItem button className={classNames(classes.item, classes.itemCategory)}>
+          <ListItem button onClick={this.newNote} className={classNames(classes.item, classes.itemCategory)}>
             <ListItemIcon>
               <AddIcon />
             </ListItemIcon>
             <ListItemText
               classes={{
                 primary: classes.itemPrimary,
-              }}
-              onClick={this.newNote}
-            >
+              }}>
               New Note
             </ListItemText>
           </ListItem>
@@ -171,7 +168,8 @@ Navigator.propTypes = {
 // redux
 function mapStateToProps(state) {
 	return {
-		noteId: state.noteId
+    noteId: state.noteId,
+    notes: state.notes
 	};
 }
 

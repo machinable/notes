@@ -12,6 +12,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import Tooltip from '@material-ui/core/Tooltip';
 import client from '../../apiclient/';
+import {setNotes, removeNote} from '../../store/notes/actionCreators';
 
 import ReactMde from "react-mde";
 import * as Showdown from "showdown";
@@ -49,8 +50,7 @@ class Content extends Component {
       note: undefined,
       loading: true,
       edit: false,
-      tab: "write",
-      toc: ""
+      tab: "write"
     };
 
     this.converter = new Showdown.Converter({
@@ -119,11 +119,17 @@ class Content extends Component {
       title = titles[0].replace(/# /g, '').replace(/#/g, '');
     }
 
+    var updatedNote = this.state.note
+    updatedNote.name = title
+    var newNotesList = this.props.notes;
+    newNotesList[this.state.note.id] = updatedNote;
+
     client.notes().update(
       this.state.note.id, 
       {content: this.state.note.content, name: title}, 
       function(){
         wasThis.setState({edit: !wasThis.state.edit});
+		    wasThis.props.dispatch(setNotes(Object.values(newNotesList)));
       }, 
       function(){});
   }
@@ -139,10 +145,11 @@ class Content extends Component {
 
   refreshList = () => {
     const history = this.props.history;
+    var newNotesList = this.props.notes;
+    delete newNotesList[this.state.note.id];
+    
+    this.props.dispatch(setNotes(Object.values(newNotesList)));
     history.push('/');
-
-    // make this more elegant, please...
-    window.location.reload();
   }
 
   render = () => {
@@ -152,7 +159,7 @@ class Content extends Component {
           <Paper className={classes.paper}>
               <div className="note-header" >
               {this.props.noteId && this.state.loading && 
-              <Typography align="center">
+              <Typography component={'span'} align="center">
                   <CircularProgress />
               </Typography>
               }
@@ -197,7 +204,7 @@ class Content extends Component {
                   </Typography>
 
                   {this.state.note && !this.state.edit && 
-                    <Typography>
+                    <Typography component={'span'}>
                       <div className="override-mde-preview mde-preview">
                         <div className="mde-preview-content">
                           <div dangerouslySetInnerHTML={{__html: this.converter.makeHtml(this.state.note.content)}} />
@@ -207,7 +214,7 @@ class Content extends Component {
                   }
               </div>}
               {this.state.note && this.state.edit && 
-                  <Typography>
+                  <Typography component={'span'}>
                     <ReactMde
                       onChange={this.handleValueChange}
                       onTabChange={this.handleTabChange}
@@ -232,7 +239,8 @@ Content.propTypes = {
 function mapStateToProps(state) {
 	return {
     noteId: state.noteId,
-    editingNote: state.editingNote
+    editingNote: state.editingNote,
+    notes: state.notes
 	};
 }
 
