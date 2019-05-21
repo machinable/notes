@@ -179,7 +179,7 @@ class Paperbase extends React.Component {
             </Hidden>
           </nav>
           <div className={classes.appContent}>
-            <Header onDrawerToggle={this.handleDrawerToggle} />
+            <Header onDrawerToggle={this.handleDrawerToggle} history={this.props.history} />
             <main className={classes.mainContent}>
               <Content history={this.props.history} />
             </main>

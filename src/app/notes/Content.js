@@ -12,7 +12,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import Tooltip from '@material-ui/core/Tooltip';
 import client from '../../apiclient/';
-import {setNotes, removeNote} from '../../store/notes/actionCreators';
+import {setNotes} from '../../store/notes/actionCreators';
 
 import ReactMde from "react-mde";
 import * as Showdown from "showdown";
@@ -40,7 +40,7 @@ const styles = theme => ({
   },
 });
 
-const noteTitle = /^(?:#)\s*(.+?)[ \t]*$/gm;
+const noteTitle = /^(?:#)\s*(.+?)[ \t]*$/m;
 
 class Content extends Component {
   constructor(props){
@@ -112,7 +112,10 @@ class Content extends Component {
   saveNote = () => {
     // save note
     var wasThis = this;
-    var titles = noteTitle.exec(this.state.note.content);
+    const currentContent = this.state.note.content
+    console.log(currentContent);
+    var titles = noteTitle.exec(currentContent);
+    console.log(titles);
     var title = "Create a header for title";
     
     if (titles && titles.length > 0) {
@@ -126,7 +129,7 @@ class Content extends Component {
 
     client.notes().update(
       this.state.note.id, 
-      {content: this.state.note.content, name: title}, 
+      {content: currentContent, name: title}, 
       function(){
         wasThis.setState({edit: !wasThis.state.edit});
 		    wasThis.props.dispatch(setNotes(Object.values(newNotesList)));

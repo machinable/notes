@@ -8,8 +8,16 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import UserIcon from '@material-ui/icons/Mood';
 import Toolbar from '@material-ui/core/Toolbar';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import Paper from '@material-ui/core/Paper';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import Popper from '@material-ui/core/Popper';
+import Typography from '@material-ui/core/Typography';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import Leave from '@material-ui/icons/ExitToApp';
 import { withStyles } from '@material-ui/core/styles';
-import {toggleEditNote} from '../../store/notes/actionCreators';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -48,9 +56,27 @@ const styles = theme => ({
 });
 
 class Header extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+    };
+  }
 
-  toggleEdit = () => {
-		this.props.dispatch(toggleEditNote());
+  handleToggle = () => {
+    this.setState({ open: !this.state.open });
+  };
+
+  handleClose = event => {
+    if (this.anchorEl.contains(event.target)) {
+      return;
+    }
+
+    this.setState({ open: false });
+  };
+
+  logout = () => {
+    this.props.history.push("/login");
   }
 
   render = () => {
@@ -77,9 +103,38 @@ class Header extends Component {
               <Grid item xs />
 
               <Grid item>
-                <IconButton color="inherit">
+                <IconButton 
+                  buttonRef={node => {
+                    this.anchorEl = node;
+                  }}
+                  aria-owns={this.state.open ? 'menu-list-grow' : undefined}
+                  aria-haspopup="true"
+                  onClick={this.handleToggle}
+                  color="inherit">
                   <UserIcon className={classes.avatar} />
                 </IconButton>
+                <Popper open={this.state.open} anchorEl={this.anchorEl} transition disablePortal>
+                  {({ TransitionProps, placement }) => (
+                    <Grow
+                      {...TransitionProps}
+                      id="menu-list-grow"
+                      style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+                    >
+                      <Paper>
+                        <ClickAwayListener onClickAway={this.handleClose}>
+                          <MenuList>
+                            <MenuItem onClick={this.logout}>
+                              <ListItemIcon>
+                                <Leave />
+                              </ListItemIcon>
+                              <Typography variant="inherit" noWrap>&nbsp;Logout</Typography>
+                            </MenuItem>
+                          </MenuList>
+                        </ClickAwayListener>
+                      </Paper>
+                    </Grow>
+                  )}
+                </Popper>
               </Grid>
             </Grid>
           </Toolbar>

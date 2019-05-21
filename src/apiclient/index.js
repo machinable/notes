@@ -6,6 +6,74 @@ class NotesClient {
         return "https://notes.machinable.io"
     }
 
+    /* helpers */
+    getAuthHeaders(){
+        return {"Authorization": "Bearer " + this.getAccessToken()}
+    }
+
+    getRefreshToken() {
+        return localStorage.getItem("refresh_token")
+    }
+
+    getAccessToken() {
+        return localStorage.getItem("access_token")
+    }
+
+    setAccessToken(token) {
+        localStorage.setItem("access_token", token);
+    }
+
+    /* MANAGEMENT APIS */
+    user() {
+        var LOGIN = this.projectHost() + "/sessions";
+        var REGISTER = this.projectHost() + "/users/register";
+        var REFRESH = this.projectHost() + "/sessions/refresh";
+        var DELETE_SESSION = this.projectHost() + "/sessions/{sid}";
+        var authHeaders = this.getAuthHeaders();
+        var refreshHeaders = {"Authorization": "Bearer " + this.getRefreshToken()}
+
+        return {
+            login: function(username, password) {
+                var encoded = window.btoa(username + ":" + password);
+                var headers = {"Authorization": "Basic " + encoded};
+                return axios.post(LOGIN, {}, {headers: headers});
+            },
+
+            register: function(username, password) {
+                return axios.post(REGISTER, {username: username, password: password});
+            },
+
+            saveTokens: function(accessToken, refreshToken, sessionId) {
+                localStorage.setItem("access_token", accessToken);
+                localStorage.setItem("refresh_token", refreshToken);
+                localStorage.setItem("session_id", sessionId);
+            },
+
+            refreshToken: function() {
+                return axios.post(REFRESH, {}, {headers: refreshHeaders})
+            },
+
+            logout: function(success, error) {
+                this.deleteCurrentSession(function(){
+                    localStorage.removeItem("access_token");
+                    localStorage.removeItem("refresh_token");
+                    localStorage.removeItem("session_id");
+                    success();
+                }, error);
+            },
+
+            deleteCurrentSession: function(success, error) {
+                var sid = localStorage.getItem("session_id");
+                if (sid) {
+                    var headers = authHeaders;
+                    var URL = DELETE_SESSION.replace("{sid}", sid)
+                    axios.delete(URL, {headers: headers}).then(success).catch(error);
+                }
+                success();
+            }
+        }
+    }
+
     notes() {
         var LIST_NOTES = this.projectHost() + "/api/notes?_limit=100&_sort=-_metadata.created";
         var CREATE_NOTE = this.projectHost() + "/api/notes";

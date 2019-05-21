@@ -19,10 +19,6 @@ export default function reducer(state = initialState, action = {}) {
 			return Object.assign({}, state, {
 				noteId: action.noteId
 			});
-		case types.TOGGLE_EDIT:
-			return Object.assign({}, state, {
-				editingNote: !state.editingNote
-			});
 		default:
 			return state;
 	}
