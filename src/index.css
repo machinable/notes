@@ -37,7 +37,17 @@ code {
   margin: 25px;
 }
 
+.mt15 {
+  margin-top: 15px;
+}
+
 .note-header {
   padding: 15px;
   background-color: #EFEFEF;
+}
+
+.center-items{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
