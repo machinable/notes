@@ -120,20 +120,17 @@ class Register extends Component {
       loading: false
     }
   }
+  
   handleResponse = (response) => {
-		Machinable.saveTokens(
-			response.data.access_token,
-			response.data.refresh_token,
-			response.data.session_id
-		);
-		this.props.history.push('/');
+		this.props.history.push('/login');
 	}
 
 	handleError = (err) => {
+    console.log(err);
 		var error = 'Issue registering, please try again.'
 		this.setState({
 		    loading: false,
-		    errors: [error]
+        errors: [error]
 		  });
 	}
 
@@ -174,9 +171,7 @@ class Register extends Component {
       var pw = this.state.password;
       var un = this.state.username;
       this.setState({
-        loading: true,
-        password: '',
-        password_confirm: ''
+        loading: true
       });
       Machinable.user().register(un, pw).then(this.handleResponse).catch(this.handleError);
     }
@@ -201,7 +196,7 @@ class Register extends Component {
               </Typography>
               {this.state.errors.map(function(v, i){
                 return (
-                  <Typography color="error">{v}</Typography>
+                  <Typography key={"error_"+i} color="error">{v}</Typography>
                 )
               })}
               <form className={classes.form}>
@@ -237,8 +232,7 @@ class Register extends Component {
                 <Button fullWidth color="primary" className={classes.button} href="/login">
                   Login
                 </Button>
-                </>
-                }
+                </>}
               </form>
             </Paper>
           </div>

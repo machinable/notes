@@ -18,6 +18,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import Leave from '@material-ui/icons/ExitToApp';
 import { withStyles } from '@material-ui/core/styles';
+import Machinable from '../../apiclient/';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -76,7 +77,13 @@ class Header extends Component {
   };
 
   logout = () => {
-    this.props.history.push("/login");
+    const history = this.props.history;
+
+    Machinable.user().logout(function(){
+      history.push("/login");
+    },function(){
+      history.push("/login");
+    });
   }
 
   render = () => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -10,8 +10,10 @@ import Notes from '@material-ui/icons/Notes';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
+import Machinable from '../../apiclient/';
 
 let theme = createMuiTheme({
   typography: {
@@ -107,54 +109,133 @@ const styles = theme => ({
   }
 });
 
-function Signin(props) {
-  const { classes } = props;
+class Signin extends Component {
+	constructor(props) {
+    super(props);
+    this.state = {
+      username: "",
+      password: "",
+      errors: [],
+      loading: false
+    }
+  }
+  handleResponse = (response) => {
+		Machinable.user().saveTokens(
+			response.data.access_token,
+			response.data.refresh_token,
+			response.data.session_id
+    );
+    // when using history the navigation drawer does not load... FIXIT
+    // this.props.history.push('/');
+    window.location.href = "/";
+	}
 
-  return (
-    <MuiThemeProvider theme={theme}>
-      <main className={classes.mainContent}>
-        <div className={classes.main}>
-          <CssBaseline />
-          <div className={classes.logo}>
-            <Avatar className={classes.largeAvatar}>
-              <Notes className={classes.largeAvatarIcon}/>
-            </Avatar>
+	handleError = (err) => {
+    console.log(err);
+		var error = 'Issue logging in, please try again.'
+		this.setState({
+		    loading: false,
+        errors: [error]
+		  });
+	}
+
+  onChange = (event) => {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  onSubmit = (event) => {
+    console.log(event);
+    event.preventDefault();
+    var errors = [];
+
+    if(!this.state.username) {
+      errors.push('Invalid username');
+    }
+
+    if(!this.state.password) {
+      errors.push('Invalid password');
+    }
+  
+    this.setState({
+      errors: errors
+    });
+
+    var arr = errors.map(function(k) { return k });
+
+    if(arr.join('').length === 0) {
+      var pw = this.state.password;
+      var un = this.state.username;
+      this.setState({
+        loading: true
+      });
+      Machinable.user().login(un, pw).then(this.handleResponse).catch(this.handleError);
+    }
+  }
+
+  render = () => {
+    const { classes } = this.props;
+
+    return (
+      <MuiThemeProvider theme={theme}>
+        <main className={classes.mainContent}>
+          <div className={classes.main}>
+            <CssBaseline />
+            <div className={classes.logo}>
+              <Avatar className={classes.largeAvatar}>
+                <Notes className={classes.largeAvatarIcon}/>
+              </Avatar>
+            </div>
+            <Paper className={classes.paper}>
+              <Typography component="h1" variant="h5">
+                Sign in
+              </Typography>
+              {this.state.errors.map(function(v, i){
+                return (
+                  <Typography key={"error_"+i} color="error">{v}</Typography>
+                )
+              })}
+              <form className={classes.form}>
+                <FormControl margin="normal" required fullWidth>
+                  <InputLabel htmlFor="username">Username</InputLabel>
+                  <Input onChange={this.onChange} id="username" name="username" autoComplete="username" autoFocus />
+                </FormControl>
+                <FormControl margin="normal" required fullWidth>
+                  <InputLabel htmlFor="password">Password</InputLabel>
+                  <Input onChange={this.onChange} name="password" type="password" id="password" autoComplete="current-password" />
+                </FormControl>
+                {this.state.loading && <div className="center-items mt15"><CircularProgress/></div>}
+                {!this.state.loading && 
+                <>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                  onClick={this.onSubmit}
+                >
+                  Sign In
+                </Button>
+
+                <Divider light variant="middle" className={classes.divider} />
+
+                <Button fullWidth color="primary" className={classes.button} href="/register">
+                  Register
+                </Button>
+                </>}
+              </form>
+            </Paper>
           </div>
-          <Paper className={classes.paper}>
-            <Typography component="h1" variant="h5">
-              Sign in
-            </Typography>
-            <form className={classes.form}>
-              <FormControl margin="normal" required fullWidth>
-                <InputLabel htmlFor="username">Username</InputLabel>
-                <Input id="username" name="username" autoComplete="username" autoFocus />
-              </FormControl>
-              <FormControl margin="normal" required fullWidth>
-                <InputLabel htmlFor="password">Password</InputLabel>
-                <Input name="password" type="password" id="password" autoComplete="current-password" />
-              </FormControl>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-                href="/"
-              >
-                Sign In
-              </Button>
-
-              <Divider light variant="middle" className={classes.divider} />
-
-              <Button fullWidth color="primary" className={classes.button} href="/register">
-                Register
-              </Button>
-            </form>
-          </Paper>
-        </div>
-      </main>
-    </MuiThemeProvider>
-  );
+        </main>
+      </MuiThemeProvider>
+    );
+  }
 }
 
 Signin.propTypes = {

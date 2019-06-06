@@ -25,7 +25,7 @@ class NotesClient {
 
     /* MANAGEMENT APIS */
     user() {
-        var LOGIN = this.projectHost() + "/sessions";
+        var LOGIN = this.projectHost() + "/sessions/";
         var REGISTER = this.projectHost() + "/users/register";
         var REFRESH = this.projectHost() + "/sessions/refresh";
         var DELETE_SESSION = this.projectHost() + "/sessions/{sid}";
@@ -40,7 +40,7 @@ class NotesClient {
             },
 
             register: function(username, password) {
-                return axios.post(REGISTER, {username: username, password: password});
+                return axios.post(REGISTER, {username: username, password: password, read: true, write: true});
             },
 
             saveTokens: function(accessToken, refreshToken, sessionId) {
@@ -80,25 +80,26 @@ class NotesClient {
         var GET_NOTE = this.projectHost() + "/api/notes/{id}";
         var UPDATE_NOTE = this.projectHost() + "/api/notes/{id}";
         var DELETE_NOTE = this.projectHost() + "/api/notes/{id}";
+        var authHeaders = this.getAuthHeaders();
 
         return {
             // lists all (limit 100) notes
             list: function(success, error) {
-                axios.get(LIST_NOTES, {})
+                axios.get(LIST_NOTES, {headers: authHeaders})
                     .then(success)
                     .catch(error);
             },
 
             // creates a new note with the give payload
             create: function(data, success, error) {
-                axios.post(CREATE_NOTE, data, {})
+                axios.post(CREATE_NOTE, data, {headers: authHeaders})
                     .then(success)
                     .catch(error);
             },
 
             // updates a note based on id
             update: function(id, data, success, error) {
-                axios.put(UPDATE_NOTE.replace("{id}", id), data, {})
+                axios.put(UPDATE_NOTE.replace("{id}", id), data, {headers: authHeaders})
                     .then(success)
                     .catch(error);
             },
@@ -106,14 +107,14 @@ class NotesClient {
             // retrieves a single note based on id
             // ... if we wanted to be clever, we really do not need this as we list all notes
             get: function(id, success, error) {
-                axios.get(GET_NOTE.replace("{id}", id), {})
+                axios.get(GET_NOTE.replace("{id}", id), {headers: authHeaders})
                     .then(success)
                     .catch(error);
             },
 
             // deletes a note based on id
             deleteNote: function(id, success, error) {
-                axios.delete(DELETE_NOTE.replace("{id}", id), {})
+                axios.delete(DELETE_NOTE.replace("{id}", id), {headers: authHeaders})
                     .then(success)
                     .catch(error);
             }
