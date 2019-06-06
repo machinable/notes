@@ -176,6 +176,10 @@ class Signin extends Component {
     }
   }
 
+  navRegister = () => {
+    this.props.history.push('/register');
+  }
+
   render = () => {
     const { classes } = this.props;
 
@@ -223,7 +227,7 @@ class Signin extends Component {
 
                 <Divider light variant="middle" className={classes.divider} />
 
-                <Button fullWidth color="primary" className={classes.button} href="/register">
+                <Button fullWidth color="primary" className={classes.button} onClick={this.navRegister}>
                   Register
                 </Button>
                 </>}
