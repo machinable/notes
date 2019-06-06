@@ -125,9 +125,7 @@ class Signin extends Component {
 			response.data.refresh_token,
 			response.data.session_id
     );
-    // when using history the navigation drawer does not load... FIXIT
-    // this.props.history.push('/');
-    window.location.href = "/";
+    this.props.history.push('/');
 	}
 
 	handleError = (err) => {

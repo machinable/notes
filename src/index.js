@@ -4,7 +4,7 @@ import { Router, Route, Switch } from 'react-router-dom';
 import axios from 'axios';
 import { Provider } from 'react-redux'; 
 import store from './store';
-import createHistory from 'history/createBrowserHistory';
+import createHistory from 'history/createHashHistory';
 import Home from './containers/Home';
 import User from './containers/User';
 import Machinable from './apiclient/';

@@ -56,6 +56,9 @@ const styles = theme => ({
   divider: {
     marginTop: theme.spacing.unit * 2,
   },
+  drawerPaper: {
+    width: 256,
+  },
 });
 
 class Navigator extends Component {
@@ -104,7 +107,7 @@ class Navigator extends Component {
     ];
 
     return (
-      <Drawer variant={variant} open={open} onClose={onClose}>
+      <Drawer variant={variant} open={open} onClose={onClose} classes={{paper: classes.drawerPaper}}>
         <List disablePadding>
           <ListItem className={classNames(classes.firebase, classes.item, classes.itemCategory)}>
             notes
