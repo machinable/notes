@@ -1,6 +1,30 @@
 # notes
 A note-taking application built on Machinable.
 
+## Machinable Schema
+
+This UI will require a project in Machinable with the following schema:
+
+```json
+{
+    "type": "object",
+    "properties": {
+        "content": {
+            "description": "The markdown formated content of the note.",
+            "type": "string"
+        },
+        "name": {
+            "description": "A descriptive name for the note.",
+            "type": "string"
+        }
+    },
+    "required": [
+        "content",
+        "name"
+    ]
+}
+```
+
 ## Local Development
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
